@@ -61,22 +61,25 @@ export default (
       continue;
     }
 
-    log(`Running test command: ${config.testCmd}`, LogLevel.INFO);
     const head = `refactor: upgrade ${name} from ${current} to ${latest}`;
-    let body = 'Tests passed but update is a breaking change and requires explicit approval';
+    let body = 'Major change requires explicit approval';
+    
+    if (config.testCmd) {
+      log(`Running test command: ${config.testCmd}`, LogLevel.INFO);
+      try {
+        await exec(config.testCmd);
+        log('Test ran okay', LogLevel.INFO);
+        body = 'Major change requires explicit approval - Tests passed';
+      } catch (err) {
+        log('Test failed. Creating a pull request to manually fix', LogLevel.WARNING);
+        log(err, LogLevel.DEBUG);
 
-    try {
-      await exec(config.testCmd);
-      log('Test ran okay', LogLevel.INFO);
-    } catch (err) {
-      log('Test failed. Creating a pull request to manually fix', LogLevel.WARNING);
-      log(err, LogLevel.DEBUG);
-
-      body = [
-        'Breaking change requires explicit approval',
-        'Tests failed with the following error:',
-        err,
-      ].join('\n\n');
+        body = [
+          'Major change requires explicit approval',
+          'Tests failed with the following error:',
+          err,
+        ].join('\n\n');
+      }
     }
 
     const commitMsg = [ head, body ].join('\n\n');
