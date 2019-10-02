@@ -1,3 +1,4 @@
+import path from 'path';
 import { Config } from '../types';
 import { LogLevel } from '../constants';
 import { Exec, Log } from '../utils';
@@ -11,7 +12,7 @@ export default (
 ): CloneRepo => async() => {
   log('Cloning repository...');
   log('Creating tmp directory', LogLevel.VERBOSE);
-  await exec(`mkdir -p ${config.baseDir}`);
+  await exec(`mkdir -p ${config.baseDir}`, { cwd: path.resolve('.') });
   const repoUrl = `${config.baseUrl}/${config.org}/${config.repo}.git`;
   log(`Cloning git repo: ${repoUrl}`, LogLevel.VERBOSE);
   await exec(`git clone ${repoUrl} ${config.controlId}`, { cwd: config.baseDir });
