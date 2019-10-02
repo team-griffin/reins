@@ -49,7 +49,9 @@ export default (log: Log, exec: Exec): GetOutdated => {
       log('Finding all outdated packages', LogLevel.INFO);
       const raw = await getRawOutdated(exec);
       log(`Found ${raw.length} outdated packages`, LogLevel.INFO);
-      outdated = raw.map(rawToOutdated);
+      outdated = raw
+        .map(rawToOutdated)
+        .filter(({ type }) => type === 'dependencies' || type === 'devDependencies');
     }
     return outdated;
   };
