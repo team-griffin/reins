@@ -26,7 +26,15 @@ export default (
   let config: Config;
   return (): Config => {
     if (!config) {
-      const loglevel = argv.level || LogLevel.ERROR;
+      const loglevel = (() => {
+        if (argv.level != null) {
+          return Number(argv.level);
+        }
+        if (argv.verbose) {
+          return LogLevel.VERBOSE;
+        }
+        return LogLevel.ERROR;
+      })();
       const token = argv.ghToken;
       const org = argv.org;
       const repo = argv.repo;
