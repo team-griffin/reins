@@ -36,8 +36,9 @@ export default (config: Config): Log => {
         break;
       }
       /* eslint-disable */
+      const message = lvl ? `[${lvl}]: ${msg}` : msg;
       // @ts-ignore
-      console[method](`[${lvl}]: ${msg}`);
+      console[method](message);
       /* eslint-enable */
     }
   };
