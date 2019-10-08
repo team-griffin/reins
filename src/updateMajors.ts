@@ -63,7 +63,7 @@ export default (
 
     const head = `refactor: upgrade ${name} from ${current} to ${latest}`;
     let body = 'Major change requires explicit approval';
-    
+
     if (config.testCmd) {
       log(`Running test command: ${config.testCmd}`, LogLevel.INFO);
       try {

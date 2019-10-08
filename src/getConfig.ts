@@ -35,7 +35,7 @@ export default (
         }
         return LogLevel.ERROR;
       })();
-      const token = argv.ghToken;
+      const token = argv.ghToken || argv.token || process.env.GH_TOKEN;
       const org = argv.org;
       const repo = argv.repo;
       const testCmd = argv.test || '';
